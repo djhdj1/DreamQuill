@@ -1,0 +1,13 @@
+[workspace]
+members = [
+    "packages/core-sdk",
+    "apps/cli",
+    "apps/desktop/src-tauri"
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+version = "0.1.0"
+authors = ["DreamQuill Team"]
+license = "MIT"

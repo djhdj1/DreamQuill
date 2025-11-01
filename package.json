@@ -1,0 +1,16 @@
+{
+  "name": "dreamquill-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "packages/ui",
+    "packages/ts-sdk",
+    "apps/desktop"
+  ],
+  "scripts": {
+    "build:ui": "npm run --workspace @dreamquill/ui build",
+    "dev:ui": "npm run --workspace @dreamquill/ui dev",
+    "lint": "npm run --workspace @dreamquill/ui lint"
+  }
+}

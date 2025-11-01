@@ -1,0 +1,29 @@
+/target
+/doc/
+/example/
+
+# Node / Frontend
+node_modules/
+packages/ui/dist/
+packages/ui/.vite/
+.vite/
+dist/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local databases
+dreamquill.db
+dreamquill.db-shm
+dreamquill.db-wal
+
+# Tooling caches
+.serena/
+.codex/
+.claude/
+
+# Tauri build artifacts
+apps/desktop/src-tauri/target/

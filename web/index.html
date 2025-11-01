@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DreamQuill - 模型服务控制台</title>
+    <style>
+      :root { color-scheme: dark; }
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; padding: 0; background:#0f172a; color:#e2e8f0; }
+      header { padding: 12px 16px; background: #111827; border-bottom: 1px solid #1f2937; display:flex; align-items:center; justify-content:space-between; }
+      main { display: grid; grid-template-columns: 340px 1fr; min-height: calc(100vh - 56px); }
+      .panel { border-right: 1px solid #1f2937; padding: 16px; display:flex; flex-direction:column; gap: 12px; }
+      .content { display:flex; flex-direction:column; }
+      .section-title { font-size: 14px; color: #93c5fd; margin-bottom: 4px; }
+      .field { display:flex; flex-direction:column; gap:6px; }
+      .row { display:flex; gap:8px; }
+      input, select, button, textarea { background:#111827; color:#e5e7eb; border:1px solid #374151; border-radius: 6px; padding: 8px 10px; font-size:14px; }
+      input:disabled, select:disabled, button:disabled { opacity:0.5; cursor:not-allowed; }
+      button { cursor:pointer; background:#2563eb; border-color:#1d4ed8; }
+      button.secondary { background:#374151; border-color:#4b5563; }
+      button.danger { background:#b91c1c; border-color:#7f1d1d; }
+      .chat-box { flex:1; padding: 16px; overflow-y:auto; border-bottom:1px solid #1f2937; }
+      .msg { padding: 8px 10px; border-radius: 8px; margin: 6px 0; max-width: 80%; white-space: pre-wrap; }
+      .msg.user { background:#1f2937; align-self:flex-end; }
+      .msg.assistant { background:#0b3b75; }
+      .input-row { display:flex; gap:8px; padding: 12px; border-top: 1px solid #1f2937; }
+      .checkbox-row { display:flex; gap:12px; align-items:center; padding: 0 12px 12px; }
+      .muted { opacity:.7; font-size: 12px; }
+      .setup-banner { margin: 12px; padding: 12px 16px; border: 1px dashed #3b82f6; border-radius: 8px; background: rgba(59,130,246,0.18); color:#bfdbfe; }
+      .log-panel { margin:0; padding:12px; border-top:1px solid #1f2937; background:#0b1220; max-height:160px; overflow:auto; font-family: "JetBrains Mono", Consolas, monospace; font-size:12px; }
+      .chat-list { list-style:none; margin:0; padding:8px; border:1px solid #1f2937; border-radius:8px; max-height:180px; overflow:auto; }
+      .chat-item { padding:6px 8px; border-radius:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+      .chat-item:hover { background:#1f2937; }
+      .chat-item.active { background:#2563eb; }
+      .chat-item span { font-size:12px; opacity:0.7; }
+      .chat-empty { color:#94a3b8; padding:6px 8px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div><strong>DreamQuill</strong> · 模型服务控制台</div>
+      <div class="muted">管理模型服务并进行聊天调试</div>
+    </header>
+    <main>
+      <aside class="panel">
+        <div>
+          <div class="section-title">模型服务列表</div>
+          <div class="field">
+            <label>选择模型服务</label>
+            <select id="providerSelect"></select>
+          </div>
+          <div class="row">
+            <button id="addProviderBtn" class="secondary" style="flex:1">新建模型服务</button>
+            <button id="deleteProviderBtn" class="secondary danger" style="flex:1">删除</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">模型服务详情</div>
+          <div class="field">
+            <label>模型服务名称</label>
+            <input id="providerName" placeholder="例如：公司内部 OpenAI" />
+          </div>
+          <div class="field">
+            <label>服务类型</label>
+            <select id="providerType">
+              <option value="openai">openai</option>
+              <option value="openai-response">openai-response</option>
+              <option value="claude">claude</option>
+              <option value="gemini">gemini</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>API 基地址</label>
+            <input id="apiBase" placeholder="https://api.openai.com" />
+          </div>
+          <div class="field">
+            <label>API Key</label>
+            <input id="apiKey" placeholder="sk-..." />
+          </div>
+          <div class="field">
+            <label>模型</label>
+            <div class="row" style="align-items:center;">
+              <select id="modelSel" style="flex:1"></select>
+              <button id="refreshModelsBtn" class="secondary" title="从接口拉取模型" style="white-space:nowrap">刷新</button>
+            </div>
+            <input id="modelInput" placeholder="或直接手动输入模型名称" />
+          </div>
+          <div class="field">
+            <label class="muted">
+              <input type="checkbox" id="makeDefaultToggle" /> 保存后设为默认模型服务
+            </label>
+            <label class="muted">
+              <input type="checkbox" id="telemetryToggle" /> 启用本地遥测日志
+            </label>
+          </div>
+          <div class="row">
+            <button id="saveBtn" style="flex:1">保存模型服务</button>
+            <button id="setDefaultBtn" class="secondary" style="flex:1">设为默认</button>
+          </div>
+          <div id="hint" class="muted"></div>
+        </div>
+
+        <div>
+          <div class="section-title">当前会话</div>
+          <div class="field">
+            <label>Chat ID（留空表示新建会话）</label>
+            <input id="chatId" placeholder="自动创建" />
+          </div>
+          <div class="row">
+            <button id="newChatBtn" class="secondary" style="flex:1">新建会话</button>
+          </div>
+          <div class="section-title">历史会话</div>
+          <ul id="chatList" class="chat-list"></ul>
+          <div class="row">
+            <button id="deleteChatBtn" class="secondary danger" style="flex:1">删除会话</button>
+          </div>
+        </div>
+      </aside>
+      <section class="content">
+        <div id="setupBanner" class="setup-banner" style="display:none;">
+          第一次使用？请先在左侧创建至少一个模型服务，点击“保存模型服务”，然后即可开始聊天测试。
+        </div>
+        <div id="chatBox" class="chat-box"></div>
+        <div class="field" style="padding: 0 12px;">
+          <label class="muted">当前 Chat ID</label>
+          <input id="currentChatId" readonly placeholder="发送消息后自动填充" />
+        </div>
+        <div class="input-row">
+          <input id="prompt" placeholder="输入消息…" style="flex:1" />
+          <button id="sendBtn">发送</button>
+          <button id="cancelBtn" class="secondary" disabled>中止</button>
+        </div>
+        <div class="checkbox-row">
+          <label class="muted"><input type="checkbox" id="debugToggle" /> 调试</label>
+          <label class="muted"><input type="checkbox" id="streamToggle" /> 非流式</label>
+          <button id="clearLogBtn" class="secondary">清空日志</button>
+        </div>
+        <pre id="logPanel" class="log-panel"></pre>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+  </html>

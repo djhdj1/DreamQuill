@@ -1,0 +1,149 @@
+:root {
+  color-scheme: dark;
+  font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
+
+body {
+  margin: 0;
+  background-color: #0f172a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+header {
+  padding: 12px 16px;
+  background: #111827;
+  border-bottom: 1px solid #1f2937;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  min-height: calc(100vh - 56px);
+}
+
+aside {
+  border-right: 1px solid #1f2937;
+  padding: 16px;
+}
+
+.section-title {
+  font-size: 14px;
+  color: #93c5fd;
+  margin: 16px 0 8px;
+}
+
+label {
+  font-size: 13px;
+  color: #cbd5f5;
+}
+
+input,
+select,
+button,
+textarea {
+  background: #111827;
+  color: #e5e7eb;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+button {
+  cursor: pointer;
+  background: #2563eb;
+  border-color: #1d4ed8;
+}
+
+button.secondary {
+  background: #374151;
+  border-color: #4b5563;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.setup-banner {
+  margin: 12px;
+  padding: 12px 16px;
+  border: 1px dashed #3b82f6;
+  border-radius: 8px;
+  background: rgba(59, 130, 246, 0.15);
+  color: #bfdbfe;
+}
+
+.chat-box {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.msg {
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin: 6px 0;
+  max-width: 80%;
+  white-space: pre-wrap;
+}
+
+.msg.user {
+  background: #1f2937;
+  align-self: flex-end;
+}
+
+.msg.assistant {
+  background: #0b3b75;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #1f2937;
+}
+
+.muted {
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+.log-panel {
+  margin: 0;
+  padding: 12px;
+  border-top: 1px solid #1f2937;
+  background: #0b1220;
+  max-height: 180px;
+  overflow: auto;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 12px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.checkbox-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 0 12px 12px;
+}
+
+.checkbox-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
