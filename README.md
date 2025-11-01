@@ -1,13 +1,22 @@
-# DreamQuill
+$1
 
-一个采用 Rust + TypeScript 构建的多包（monorepo）项目，包含：
-- 核心 SDK（Rust，`packages/core-sdk`）：LLM 服务对接、SQLite 持久化、HTTP API。
-- CLI（Rust，`apps/cli`）：初始化 Provider、发起对话、启动本地 HTTP 服务。
-- 桌面应用（Tauri 2，`apps/desktop`）：原生桌面端聊天体验，内置安全存储。
-- Web UI（Vite/React，`packages/ui`）：通过 TS SDK 调用 API 或 Tauri 指令。
-- TS SDK（`packages/ts-sdk`）：统一传输抽象（HTTP / Tauri），提供 Provider 与 Chat 服务调用。
+## 项目目标与功能
 
-数据默认持久化到仓库根目录的 `dreamquill.db`（SQLite，WAL 模式）。
+- 目标
+  - 提供统一、跨平台的聊天与模型服务接入能力（Web + 桌面 + CLI）。
+  - 降低多 Provider 切换成本，支持本地与云端模型统一调用。
+  - 保留与管理完整会话历史，便于回溯、重命名、分支与再生成。
+  - 以 KISS/YAGNI 为设计原则，聚焦“可用、稳定、易集成”。
+- 核心功能
+  - Provider 管理：创建/更新/删除、选择默认 Provider、开关匿名遥测、列出可用模型、健康检查与预检。
+  - 聊天能力：新建会话、发送消息、流式回复（SSE/Tauri 事件）、重新生成助手消息、会话重命名、删除、按消息分支会话。
+  - 运行形态：
+    - 桌面端（Tauri 2）：API Key 存入安全存储，不落盘数据库。
+    - Web 模式：Vite 开发代理至本地 HTTP API；生产可由后端统一托管静态资源。
+    - CLI：最小可聊流程与本地 HTTP 服务启动。
+  - 存储与服务：SQLite（WAL），Axum 提供 HTTP API 与静态资源托管。
+- 非目标（当前阶段）
+  - 复杂多租户/权限系统、队列与大规模分布式调度、细粒度计费/配额管理等重型能力（按需迭代）。
 
 
 ## 目录结构
